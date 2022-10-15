@@ -4,22 +4,35 @@ import bodyParser from 'body-parser'
 const app = express()
 const port = process.env.PORT || 5000
 
-const videos = [
+let videos = [
     {
-        id: 1,
+        id: +(new Date().getTime()),
         title: "hello",
-        author: "Joe"
+        author: "Joe",
+        canBeDownloaded: true,
+        minAgeRestriction: null,
+        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        availableResolutions: ["P144"]
     },
     {
-        id: 2,
+        id: +(new Date().getTime()),
         title: "world",
-        author: "Ann"
+        author: "Ann",
+        canBeDownloaded: true,
+        minAgeRestriction: null,
+        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        availableResolutions: ["P144"]
     }
 ]
 
 const parserMiddleware = bodyParser()
 app.use(parserMiddleware)
 
+app.get('/', (req: Request, res: Response) => {
+    res.send('Hello world')
+})
 //
 app.get('/videos', (req: Request, res: Response) => {
     res.send(videos)
@@ -32,14 +45,20 @@ app.post('/videos', (req: Request, res: Response) => {
             errorMessages: [{
                 "message": "Incorrect title",
                 "field": "title"
-            }]
+            }],
+            resultCode: 1
         })
         return;
     }
     const newVideo = {
         id: +(new Date()),
-        title: req.body.title,
-        author: req.body.author
+        title: title,
+        author: req.body.author,  // 'it-incubator.eu'
+        canBeDownloaded: true,
+        minAgeRestriction: null,
+        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        availableResolutions: ["P144"]
     }
     videos.push(newVideo)
     res.status(201).send(newVideo)
@@ -56,7 +75,8 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
             errorMessages: [{
                 "message": "Incorrect title",
                 "field": "title"
-            }]
+            }],
+            resultCode: 1
         })
         return;
     }
@@ -71,14 +91,14 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     }
 })
 app.delete('/videos/:videoId', (req: Request, res: Response) => {
-    for (let i = 0; i < videos.length; i++) {
-        if (videos[i].id === +req.params.id) {
-            videos.splice(i, 1)
-            res.send(204)
-            return;
-        }
+    const id = +req.params.videoId
+    const newVideos = videos.filter(v => v.id !== id)
+    if (newVideos.length < videos.length) {
+        videos = newVideos
+        res.send(204)
+    } else {
+        res.send(404)
     }
-    res.send(404)
 })
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     let result = videos.splice(0, videos.length - 1)
