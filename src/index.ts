@@ -11,8 +11,8 @@ let videos = [
         author: "Author A",
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
-        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         availableResolutions: ["P144"]
     },
     {
@@ -34,7 +34,7 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Hello world')
 })
 app.get('/videos', (req: Request, res: Response) => {
-    res.send(videos)
+    res.status(200).send(videos)
 })
 app.post('/videos', (req: Request, res: Response) => {
     let title = req.body.title
@@ -43,8 +43,7 @@ app.post('/videos', (req: Request, res: Response) => {
             errorMessages: [{
                 "message": "Incorrect title",
                 "field": "title"
-            }],
-            resultCode: 1
+            }]
         })
         return;
     }
@@ -55,8 +54,7 @@ app.post('/videos', (req: Request, res: Response) => {
             errorMessages: [{
                 "message": "Incorrect author",
                 "field": "author"
-            }],
-            resultCode: 1
+            }]
         })
         return;
     }
@@ -66,8 +64,8 @@ app.post('/videos', (req: Request, res: Response) => {
         author: author,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
-        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         availableResolutions: ["P144"]
     }
     videos.push(newVideo)
@@ -102,8 +100,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
             errorMessages: [{
                 "message": "Incorrect author",
                 "field": "author"
-            }],
-            resultCode: 1
+            }]
         })
         return;
     }
@@ -113,6 +110,10 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     if (video) {
         video.title = req.body.title
         video.author = req.body.author
+        video.canBeDownloaded = req.body.canBeDownloaded
+        video.minAgeRestriction = req.body.minAgeRestriction
+        video.publicationDate = req.body.publicationDate
+        video.availableResolutions = req.body.availableResolutions
         res.status(204).send(video)
     } else {
         res.send(404)
