@@ -59,18 +59,6 @@ app.post('/videos', (req: Request, res: Response) => {
         return;
     }
 
-    let availableResolutions = req.body.availableResolutions
-    let availableAll = [ "P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160" ]
-    if (!availableAll.includes(availableResolutions)) {
-        res.status(400).send({
-            errorMessages: [{
-                "message": "Incorrect resolution(s)",
-                "field": "resolution"
-            }]
-        })
-        return;
-    }
-
     const newVideo = {
         id: +(new Date()),
         title: title,
@@ -79,7 +67,7 @@ app.post('/videos', (req: Request, res: Response) => {
         minAgeRestriction: null,
         createdAt: new Date(Date.now()).toISOString(),
         publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
-        availableResolutions: availableResolutions
+        availableResolutions: req.body.availableResolutions
     }
     videos.push(newVideo)
     res.status(201).send(newVideo)
@@ -121,12 +109,12 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     if (!video) {
         res.status(404)
     } else {
-        /*video.title = title
+        video.title = title
         video.author = author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.minAgeRestriction = req.body.minAgeRestriction
         video.publicationDate = req.body.publicationDate
-        video.availableResolutions = req.body.availableResolutions*/
+        video.availableResolutions = req.body.availableResolutions
         res.status(204)
     }
 })
