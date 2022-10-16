@@ -53,7 +53,7 @@ app.post('/videos', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect author",
-                "field": "author"
+                "field": "title"
             }]
         })
         return;
@@ -88,7 +88,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
                 "field": "title"
             }, {
                 message: "message",
-                field: "canBeDownloaded"
+                field: "title"
             }]
         })
         return;
@@ -99,7 +99,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect author",
-                "field": "author"
+                "field": "title"
             }]
         })
         return;
