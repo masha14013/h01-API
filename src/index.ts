@@ -126,10 +126,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     }
 })
 app.delete('/videos/:videoId', (req: Request, res: Response) => {
-    if (!req.params.videoId) {
-        res.status(404)
-        return;
-    }
+    const id = +req.params.videoId
     const newVideos = videos.filter(v => v.id !== id)
     if (newVideos.length < videos.length) {
         videos = newVideos
