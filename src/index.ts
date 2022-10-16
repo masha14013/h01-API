@@ -11,8 +11,8 @@ let videos = [
         author: "Author A",
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
-        publicationDate: new Date(Date.now() + (3600 * 1000 * 24) + 1).toISOString(),
+        createdAt: new Date(Date.now()).toISOString(),
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         availableResolutions: ["P144"]
     }/*,
     {
@@ -21,7 +21,7 @@ let videos = [
         author: "Author B",
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
+        createdAt: new Date(Date.now()).toISOString(),
         publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         availableResolutions: ["P144"]
     }*/
@@ -65,23 +65,30 @@ app.post('/videos', (req: Request, res: Response) => {
         author: author,
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
-        publicationDate: new Date(Date.now() + (3600 * 1000 * 24) + 1).toISOString(),
+        createdAt: new Date(Date.now()).toISOString(),
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         availableResolutions: req.body.availableResolutions
     }
     videos.push(newVideo)
     res.status(201).send(newVideo)
 })
 app.get('/videos/:videoId', (req: Request, res: Response) => {
-
+    if (!req.params.videoId) {
+        res.status(404)
+        return;
+    }
     let video = videos.find(v => v.id === +req.params.videoId)
     if (!video) {
-        res.send(404)
+        res.status(404)
     } else {
         res.status(200).send(video)
     }
 })
 app.put('/videos/:videoId', (req: Request, res: Response) => {
+    if (!req.params.videoId) {
+        res.status(404)
+        return;
+    }
     let title = req.body.title
     if(!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
         res.status(400).send({
@@ -119,7 +126,10 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     }
 })
 app.delete('/videos/:videoId', (req: Request, res: Response) => {
-    const id = +req.params.videoId
+    if (!req.params.videoId) {
+        res.status(404)
+        return;
+    }
     const newVideos = videos.filter(v => v.id !== id)
     if (newVideos.length < videos.length) {
         videos = newVideos
