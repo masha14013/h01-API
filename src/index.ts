@@ -8,7 +8,7 @@ let videos = [
     {
         id: +(new Date().getTime()),
         title: "hello",
-        author: "Joe",
+        author: "Author A",
         canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
@@ -18,11 +18,11 @@ let videos = [
     {
         id: +(new Date().getTime()),
         title: "world",
-        author: "Ann",
+        author: "Author B",
         canBeDownloaded: false,
         minAgeRestriction: null,
-        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
-        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         availableResolutions: ["P144"]
     }
 ]
@@ -88,8 +88,10 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
             errorMessages: [{
                 "message": "Incorrect title",
                 "field": "title"
-            }],
-            resultCode: 1
+            }, {
+                message: "message",
+                field: "canBeDownloaded"
+            }]
         })
         return;
     }
