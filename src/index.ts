@@ -33,44 +33,12 @@ app.use(parserMiddleware)
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello world')
 })
-//
 app.get('/videos', (req: Request, res: Response) => {
     res.send(videos)
 })
-//
 app.post('/videos', (req: Request, res: Response) => {
     let title = req.body.title
-    if(!title || typeof title !== 'string' || !title.trim()) {
-        res.status(400).send({
-            errorMessages: [{
-                "message": "Incorrect title",
-                "field": "title"
-            }],
-            resultCode: 1
-        })
-        return;
-    }
-    const newVideo = {
-        id: +(new Date()),
-        title: title,
-        author: req.body.author,  // 'it-incubator.eu'
-        canBeDownloaded: true,
-        minAgeRestriction: null,
-        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
-        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
-        availableResolutions: ["P144"]
-    }
-    videos.push(newVideo)
-    res.status(201).send(newVideo)
-})
-app.get('/videos/:videoId', (req: Request, res: Response) => {
-    let video = videos.find(v => v.id === +req.params.videoId)
-    video ? res.status(200).send(video) : res.send(404)
-})
-//
-app.put('/videos/:videoId', (req: Request, res: Response) => {
-    let title = req.body.title
-    if(!title || typeof title !== 'string' || !title.trim()) {
+    if(!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect title",
@@ -81,10 +49,68 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         return;
     }
 
-    const id = +req.params.videoId;
-    const video = videos.find(v => v.id === id)
+    let author = req.body.author
+    if(!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
+        res.status(400).send({
+            errorMessages: [{
+                "message": "Incorrect author",
+                "field": "author"
+            }],
+            resultCode: 1
+        })
+        return;
+    }
+    const newVideo = {
+        id: +(new Date()),
+        title: title,
+        author: author,
+        canBeDownloaded: false,
+        minAgeRestriction: null,
+        createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString,
+        availableResolutions: ["P144"]
+    }
+    videos.push(newVideo)
+    res.status(201).send(newVideo)
+})
+app.get('/videos/:videoId', (req: Request, res: Response) => {
+    let video = videos.find(v => v.id === +req.params.videoId)
+    if (!video) {
+        res.send(404)
+    } else {
+        res.status(200).send(video)
+    }
+})
+app.put('/videos/:videoId', (req: Request, res: Response) => {
+    let title = req.body.title
+    if(!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
+        res.status(400).send({
+            errorMessages: [{
+                "message": "Incorrect title",
+                "field": "title"
+            }],
+            resultCode: 1
+        })
+        return;
+    }
+
+    let author = req.body.author
+    if(!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
+        res.status(400).send({
+            errorMessages: [{
+                "message": "Incorrect author",
+                "field": "author"
+            }],
+            resultCode: 1
+        })
+        return;
+    }
+
+    const id = +req.params.videoId
+    let video = videos.find(v => v.id === id)
     if (video) {
         video.title = req.body.title
+        video.author = req.body.author
         res.status(204).send(video)
     } else {
         res.send(404)
@@ -102,7 +128,12 @@ app.delete('/videos/:videoId', (req: Request, res: Response) => {
 })
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     let result = videos.splice(0, videos.length - 1)
-    res.status(204).send(result)
+    if (result) {
+        res.status(204).send(result)
+    } else {
+        res.status(404)
+    }
+
 })
 
 app.listen(port, () => {
