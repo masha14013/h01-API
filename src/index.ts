@@ -42,7 +42,7 @@ app.post('/videos', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect title",
-                "field": "string"
+                "field": "title"
             }]
         })
         return;
@@ -53,7 +53,7 @@ app.post('/videos', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect author",
-                "field": "string"
+                "field": "title"
             }]
         })
         return;
@@ -85,7 +85,10 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect title",
-                "field": "string"
+                "field": "title"
+            }, {
+                "message": "Incorrect title",
+                "field": "canBeDownloaded"
             }]
         })
         return;
@@ -96,7 +99,10 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect author",
-                "field": "string"
+                "field": "title"
+            }, {
+                "message": "Incorrect title",
+                "field": "canBeDownloaded"
             }]
         })
         return;
