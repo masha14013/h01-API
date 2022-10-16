@@ -12,9 +12,9 @@ let videos = [
         canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
-        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24) + 1).toISOString(),
         availableResolutions: ["P144"]
-    },
+    }/*,
     {
         id: +(new Date().getTime()),
         title: "world",
@@ -24,7 +24,7 @@ let videos = [
         createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         availableResolutions: ["P144"]
-    }
+    }*/
 ]
 
 const parserMiddleware = bodyParser()
@@ -58,6 +58,7 @@ app.post('/videos', (req: Request, res: Response) => {
         })
         return;
     }
+
     const newVideo = {
         id: +(new Date()),
         title: title,
@@ -65,13 +66,14 @@ app.post('/videos', (req: Request, res: Response) => {
         canBeDownloaded: false,
         minAgeRestriction: null,
         createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
-        publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
+        publicationDate: new Date(Date.now() + (3600 * 1000 * 24) + 1).toISOString(),
         availableResolutions: req.body.availableResolutions
     }
     videos.push(newVideo)
     res.status(201).send(newVideo)
 })
 app.get('/videos/:videoId', (req: Request, res: Response) => {
+
     let video = videos.find(v => v.id === +req.params.videoId)
     if (!video) {
         res.send(404)
@@ -86,9 +88,6 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
             errorMessages: [{
                 "message": "Incorrect title",
                 "field": "title"
-            }, {
-                "message": "Incorrect title",
-                "field": "canBeDownloaded"
             }]
         })
         return;
@@ -100,9 +99,6 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
             errorMessages: [{
                 "message": "Incorrect author",
                 "field": "title"
-            }, {
-                "message": "Incorrect title",
-                "field": "canBeDownloaded"
             }]
         })
         return;
