@@ -42,7 +42,7 @@ app.post('/videos', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect title",
-                "field": "title"
+                "field": "string"
             }]
         })
         return;
@@ -53,7 +53,7 @@ app.post('/videos', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect author",
-                "field": "title"
+                "field": "string"
             }]
         })
         return;
@@ -66,7 +66,7 @@ app.post('/videos', (req: Request, res: Response) => {
         minAgeRestriction: null,
         createdAt: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
-        availableResolutions: ["P144"]
+        availableResolutions: req.body.availableResolutions
     }
     videos.push(newVideo)
     res.status(201).send(newVideo)
@@ -85,10 +85,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect title",
-                "field": "title"
-            }, {
-                message: "message",
-                field: "title"
+                "field": "string"
             }]
         })
         return;
@@ -99,7 +96,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         res.status(400).send({
             errorMessages: [{
                 "message": "Incorrect author",
-                "field": "title"
+                "field": "string"
             }]
         })
         return;
@@ -107,16 +104,16 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
 
     const id = +req.params.videoId
     let video = videos.find(v => v.id === id)
-    if (video) {
-        video.title = req.body.title
-        video.author = req.body.author
+    if (!video) {
+        res.status(404)
+    } else {
+        video.title = title
+        video.author = author
         video.canBeDownloaded = req.body.canBeDownloaded
         video.minAgeRestriction = req.body.minAgeRestriction
         video.publicationDate = req.body.publicationDate
         video.availableResolutions = req.body.availableResolutions
         res.status(204).send(video)
-    } else {
-        res.send(404)
     }
 })
 app.delete('/videos/:videoId', (req: Request, res: Response) => {
