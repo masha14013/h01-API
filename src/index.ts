@@ -42,7 +42,15 @@ app.post('/videos', (req: Request, res: Response) => {
     let author = req.body.author
     let resolutions = req.body.availableResolutions
     const errors = []
+    let resErrors = true
     const availableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"]
+
+    for (let i = 0; i < resolutions.length; i++) {
+        if (!availableResolutions.includes(resolutions[i])) {
+            resErrors = false;
+        }
+        break;
+    }
 
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
         errors.push({
@@ -53,6 +61,11 @@ app.post('/videos', (req: Request, res: Response) => {
         errors.push({
             message: "Incorrect author",
             field: "author"
+        })
+    } else if (!resolutions || resErrors == false) {
+        errors.push({
+            message: "Incorrect resolutions",
+            field: "resolutions"
         })
     }
 
