@@ -42,35 +42,24 @@ app.post('/videos', (req: Request, res: Response) => {
     let author = req.body.author
     let resolutions = req.body.availableResolutions
     const errors = []
-    let resErrors = true
     const availableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"]
-
-    for (let i = 0; i < resolutions.length; i++) {
-        if (!availableResolutions.includes(resolutions[i])) {
-            resErrors = false;
-        }
-        break;
-    }
 
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
         errors.push({
             message: "Incorrect title",
             field: "title"
         })
-    } else if (!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
+    }
+
+    if (!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
         errors.push({
             message: "Incorrect author",
             field: "author"
         })
-    } else if (!resolutions || resErrors == false) {
-        errors.push({
-            message: "Incorrect resolutions",
-            field: "resolutions"
-        })
     }
 
     if (errors.length) {
-        res.status(400).send({errorMessages: errors})
+        res.status(400).send({errorsMessages: errors})
         return;
     }
 
@@ -108,7 +97,9 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
             message: "Incorrect title",
             field: "title"
         })
-    } else if (!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
+    }
+
+    if (!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
         errors.push({
             message: "Incorrect author",
             field: "author"
@@ -116,7 +107,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     }
 
     if (errors.length) {
-        res.status(400).send({errorMessages: errors})
+        res.status(400).send({errorsMessages: errors})
         return;
     }
 
