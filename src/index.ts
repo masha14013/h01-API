@@ -69,7 +69,8 @@ app.post('/videos', (req: Request, res: Response) => {
         P2160 = "P2160"
     }
 
-    const errorArrAvailableResolutons = req.body.availableResolutions.filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
+    //const errorArrAvailableResolutons = req.body.availableResolutions.filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
+    const errorArrAvailableResolutons = req.body.availableResolutions.every((resulation: any) => Object.values(enumAvailableResolutions).includes(resulation))
 
     if (errorArrAvailableResolutons.length > 0) {
         errors.push({
@@ -137,7 +138,8 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         P2160 = "P2160"
     }
 
-    const errorArrAvailableResolutons = req.body.availableResolutions.filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
+    //const errorArrAvailableResolutons = req.body.availableResolutions.filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
+    const errorArrAvailableResolutons = req.body.availableResolutions.every((resulation: any) => Object.values(enumAvailableResolutions).includes(resulation))
 
     if (errorArrAvailableResolutons.length > 0) {
         errors.push({
