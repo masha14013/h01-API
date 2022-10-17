@@ -58,6 +58,26 @@ app.post('/videos', (req: Request, res: Response) => {
         })
     }
 
+    enum enumAvailableResolutions {
+        P144 = "P144",
+        P240 = "P144",
+        P360 = "P360",
+        P480 = "P480",
+        P720 = "P720",
+        P1080 = "P1080",
+        P1440 = "P1440",
+        P2160 = "P2160"
+    }
+
+    const errorArrAvailableResolutons = req.body.availableResolutions.filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
+
+    if (errorArrAvailableResolutons.length > 0) {
+        errors.push({
+            message: "Incorrect resolution",
+            field: "resolutons"
+        })
+    }
+
     if (errors.length) {
         res.status(400).send({errorsMessages: errors})
         return;
@@ -103,6 +123,26 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         errors.push({
             message: "Incorrect author",
             field: "author"
+        })
+    }
+
+    enum enumAvailableResolutions {
+        P144 = "P144",
+        P240 = "P144",
+        P360 = "P360",
+        P480 = "P480",
+        P720 = "P720",
+        P1080 = "P1080",
+        P1440 = "P1440",
+        P2160 = "P2160"
+    }
+
+    const errorArrAvailableResolutons = req.body.availableResolutions.filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
+
+    if (errorArrAvailableResolutons.length > 0) {
+        errors.push({
+            message: "Incorrect resolution",
+            field: "resolutons"
         })
     }
 
