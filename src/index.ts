@@ -37,25 +37,27 @@ app.get('/videos', (req: Request, res: Response) => {
     res.status(200).send(videos)
 })
 app.post('/videos', (req: Request, res: Response) => {
+
     let title = req.body.title
-    if(!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
-        res.status(400).send({
-            errorMessages: [{
-                "message": "Incorrect title",
-                "field": "title"
-            }]
+    let author = req.body.author
+    let resolutions = req.body.availableResolutions
+    const errors = []
+    const availableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"]
+
+    if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
+        errors.push({
+            message: "Incorrect title",
+            field: "title"
         })
-        return;
+    } else if (!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
+        errors.push({
+            message: "Incorrect author",
+            field: "author"
+        })
     }
 
-    let author = req.body.author
-    if(!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
-        res.status(400).send({
-            errorMessages: [{
-                "message": "Incorrect author",
-                "field": "author"
-            }]
-        })
+    if (errors.length) {
+        res.status(400).send({errorMessages: errors})
         return;
     }
 
@@ -69,6 +71,7 @@ app.post('/videos', (req: Request, res: Response) => {
         publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
         availableResolutions: req.body.availableResolutions
     }
+
     videos.push(newVideo)
     res.status(201).send(newVideo)
 })
@@ -76,38 +79,39 @@ app.get('/videos/:videoId', (req: Request, res: Response) => {
 
     let video = videos.find(v => v.id === +req.params.videoId)
     if (!video) {
-        res.status(404)
+        res.sendStatus(404)
     } else {
         res.status(200).send(video)
     }
 })
 app.put('/videos/:videoId', (req: Request, res: Response) => {
+
     let title = req.body.title
-    if(!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
-        res.status(400).send({
-            errorMessages: [{
-                "message": "Incorrect title",
-                "field": "title"
-            }]
+    let author = req.body.author
+    const errors = []
+
+    if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
+        errors.push({
+            message: "Incorrect title",
+            field: "title"
         })
-        return;
+    } else if (!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
+        errors.push({
+            message: "Incorrect author",
+            field: "author"
+        })
     }
 
-    let author = req.body.author
-    if(!author || typeof author !== 'string' || !author.trim() || author.length > 20) {
-        res.status(400).send({
-            errorMessages: [{
-                "message": "Incorrect author",
-                "field": "author"
-            }]
-        })
+    if (errors.length) {
+        res.status(400).send({errorMessages: errors})
         return;
     }
 
     const id = +req.params.videoId
     let video = videos.find(v => v.id === id)
+
     if (!video) {
-        res.status(404)
+        res.sendStatus(404)
     } else {
         video.title = title
         video.author = author
@@ -115,7 +119,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         video.minAgeRestriction = req.body.minAgeRestriction
         video.publicationDate = req.body.publicationDate
         video.availableResolutions = req.body.availableResolutions
-        res.status(204)
+        res.sendStatus(204)
     }
 })
 app.delete('/videos/:videoId', (req: Request, res: Response) => {
@@ -123,9 +127,9 @@ app.delete('/videos/:videoId', (req: Request, res: Response) => {
     const newVideos = videos.filter(v => v.id !== id)
     if (newVideos.length < videos.length) {
         videos = newVideos
-        res.status(204)
+        res.sendStatus(204)
     } else {
-        res.status(404)
+        res.sendStatus(404)
     }
 })
 app.delete('/testing/all-data', (req: Request, res: Response) => {
