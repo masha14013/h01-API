@@ -133,7 +133,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         })
     }
 
-    if (minAgeRestriction && typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction > 18 || minAgeRestriction !== null ) {
+    if ((minAgeRestriction < 1 || minAgeRestriction > 18) && minAgeRestriction != null) {
         errors.push({
             message: "Incorrect age",
             field: "minAgeRestriction"
