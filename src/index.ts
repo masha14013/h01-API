@@ -44,7 +44,7 @@ app.post('/videos', (req: Request, res: Response) => {
     let title = req.body.title
     let author = req.body.author
     const errors = []
-    const availableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"]
+
 
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
         errors.push({
@@ -60,7 +60,7 @@ app.post('/videos', (req: Request, res: Response) => {
         })
     }
 
-    enum enumAvailableResolutions {
+    /*enum enumAvailableResolutions {
         P144 = "P144",
         P240 = "P144",
         P360 = "P360",
@@ -69,10 +69,12 @@ app.post('/videos', (req: Request, res: Response) => {
         P1080 = "P1080",
         P1440 = "P1440",
         P2160 = "P2160"
-    }
+    }*/
+
+    const availableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"]
 
     const errorArrAvailableResolutons = req.body.availableResolutions
-        .filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
+        .filter((item: any) => !Object.values(availableResolutions).includes(item))
 
     if (errorArrAvailableResolutons.length > 0) {
         errors.push({
@@ -129,7 +131,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         })
     }
 
-    enum enumAvailableResolutions {
+    /*enum enumAvailableResolutions {
         P144 = "P144",
         P240 = "P144",
         P360 = "P360",
@@ -138,10 +140,12 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         P1080 = "P1080",
         P1440 = "P1440",
         P2160 = "P2160"
-    }
+    }*/
+
+    const availableResolutions = ["P144", "P240", "P360", "P480", "P720", "P1080", "P1440", "P2160"]
 
     const errorArrAvailableResolutons = req.body.availableResolutions
-        .filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
+        .filter((item: any) => !Object.values(availableResolutions).includes(item))
 
     if (errorArrAvailableResolutons.length > 0) {
         errors.push({
