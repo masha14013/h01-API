@@ -79,7 +79,7 @@ app.post('/videos', (req: Request, res: Response) => {
     if (errorArrAvailableResolutons.length > 0) {
         errors.push({
             message: "Incorrect resolution",
-            field: "resolutons"
+            field: "availableResolutions"
         })
     }
 
@@ -115,6 +115,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
 
     let title = req.body.title
     let author = req.body.author
+    let canBeDownloaded = req.body.canBeDownloaded
     const errors = []
 
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
@@ -128,6 +129,13 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         errors.push({
             message: "Incorrect author",
             field: "author"
+        })
+    }
+
+    if (!canBeDownloaded || typeof canBeDownloaded !== 'boolean') {
+        errors.push({
+            message: "Should be boolean",
+            field: "canBeDownloaded"
         })
     }
 
@@ -150,7 +158,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     if (errorArrAvailableResolutons.length > 0) {
         errors.push({
             message: "Incorrect resolution",
-            field: "resolutons"
+            field: "availableResolutions"
         })
     }
 
