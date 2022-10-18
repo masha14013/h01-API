@@ -116,6 +116,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     let title = req.body.title
     let author = req.body.author
     let canBeDownloaded = req.body.canBeDownloaded
+    let minAgeRestriction = req.body.minAgeRestriction
     const errors = []
 
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
@@ -129,6 +130,13 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         errors.push({
             message: "Incorrect author",
             field: "author"
+        })
+    }
+
+    if (minAgeRestriction && typeof minAgeRestriction !== 'number' || minAgeRestriction < 1 || minAgeRestriction > 18 || minAgeRestriction !== null ) {
+        errors.push({
+            message: "Incorrect age",
+            field: "minAgeRestriction"
         })
     }
 
