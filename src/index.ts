@@ -117,6 +117,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
     let author = req.body.author
     let canBeDownloaded = req.body.canBeDownloaded
     let minAgeRestriction = req.body.minAgeRestriction
+    let publicationDate = req.body.publicationDate
     const errors = []
 
     if (!title || typeof title !== 'string' || !title.trim() || title.length > 40) {
@@ -130,6 +131,13 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         errors.push({
             message: "Incorrect author",
             field: "author"
+        })
+    }
+
+    if (!publicationDate || publicationDate.length !== 12 || isNaN(Date.parse(publicationDate))) {
+        errors.push({
+            message: "Incorrect publication date",
+            field: "publicationDate"
         })
     }
 
