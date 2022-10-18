@@ -134,7 +134,7 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         })
     }
 
-    if (!publicationDate || publicationDate.length !== 12 || isNaN(Date.parse(publicationDate))) {
+    if (!publicationDate || publicationDate.length !== 24 || isNaN(Date.parse(publicationDate))) {
         errors.push({
             message: "Incorrect publication date",
             field: "publicationDate"
