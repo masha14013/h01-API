@@ -5,14 +5,6 @@ const app = express()
 const port = process.env.PORT || 5000
 
 /*type VideosType = {
-    id: +(new Date().getTime()),
-    title: string,
-    author: "Author A",
-    canBeDownloaded: false,
-    minAgeRestriction: null,
-    createdAt: new Date(Date.now()).toISOString(),
-    publicationDate: new Date(Date.now() + (3600 * 1000 * 24)).toISOString(),
-    availableResolutions: ["P144"]
 }*/
 
 let videos = [
@@ -79,7 +71,8 @@ app.post('/videos', (req: Request, res: Response) => {
         P2160 = "P2160"
     }
 
-    const errorArrAvailableResolutons = req.body.availableResolutions.filter((item: any) => !Object.values(enumAvailableResolutions).includes(item))
+    const errorArrAvailableResolutons = req.body.availableResolutions
+        .filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
 
     if (errorArrAvailableResolutons.length > 0) {
         errors.push({
@@ -147,7 +140,8 @@ app.put('/videos/:videoId', (req: Request, res: Response) => {
         P2160 = "P2160"
     }
 
-    const errorArrAvailableResolutons = req.body.availableResolutions.filter((item: any) => !Object.values(enumAvailableResolutions).includes(item))
+    const errorArrAvailableResolutons = req.body.availableResolutions
+        .filter((item: enumAvailableResolutions) => !Object.values(enumAvailableResolutions).includes(item))
 
     if (errorArrAvailableResolutons.length > 0) {
         errors.push({
